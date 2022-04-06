@@ -1,0 +1,6 @@
+grammar parentheses;
+
+e () [] -> OPEN e() CLOSE e() {} | ε;
+
+OPEN: "\\(";
+CLOSE: "\\)";

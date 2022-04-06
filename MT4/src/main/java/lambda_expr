@@ -1,0 +1,26 @@
+grammar lambda;
+
+s () [] -> LAMBDA w() SEMICOLON e() {};
+w () [] -> LETTER v() {} | ε;
+v () [] -> COMMA LETTER v() {} | ε;
+e () [] -> f() a() {};
+f () [] -> n() m() {};
+a () [] -> MINUS f() a() {} | PLUS f() a() {} | ε;
+m () [] -> DIV n() m() {} | MUL n() m() {} | ε;
+n () [] -> LETTER {} | NUM {} | OPEN e() CLOSE {};
+
+
+POW: "\\*\\*";
+PLUS: "\\+";
+MINUS: "-";
+MUL: "\\*";
+DIV: "/";
+NUM: "[0-9]+";
+OPEN: "\\(";
+CLOSE: "\\)";
+LAMBDA: "lambda";
+SEMICOLON: "\\:";
+COMMA: "\\,";
+LETTER : "[a-z][a-z|A-Z|0-9|_]*";
+
+

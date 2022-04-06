@@ -1,0 +1,59 @@
+grammar math;
+
+expr () [int val] -> term() exprS(term0.val) {$val = exprS1.val;};
+
+exprS(int acc) [int val] ->
+PLUS term() {$val = acc + term1.val;} exprS($val) {$val = exprS2.val;}
+| MINUS term() {$val = acc - term1.val;} exprS($val) {$val = exprS2.val;} | ε {$val = acc;} ;
+
+term () [int val] -> power() termS(power0.val) {$val = termS1.val;};
+
+termS (int acc) [int val] ->
+MUL power() {$val = acc * power1.val;} termS($val) {$val = termS2.val;}
+| DIV power() {$val = acc / power1.val;} termS($val) {$val = termS2.val;} | ε {$val = acc;} ;
+
+power () [int val] -> factor() powerS(factor0.val) {$val = powerS1.val;} ;
+
+powerS(int acc) [int val] -> POW  power() {$val = (int) Math.pow(acc, power1.val);}
+| ε {$val = acc;} ;
+
+factor () [int val] ->
+SIN factor() {$val = (int) Math.sin(factor1.val);}
+| COS factor() {$val = (int) Math.cos(factor1.val);}
+| NUM {$val = Integer.parseInt(NUM0);}
+| OPEN expr() CLOSE {$val = expr1.val;}
+| MINUS factor() {$val = (-1) * factor1.val;}
+| OPENBIN expr() COMMA expr() CLOSEBIN {
+int val1 = expr1.val;
+int val2 = expr3.val;
+int n = 1;
+int k = 1;
+int p = 1;
+for(int i = 1; i <=val1; i++)
+  n *= i;
+
+for(int i = 1; i <= val2; i++)
+  k *= i;
+
+for(int i = 1; i <= val1 - val2; i++)
+  p *= i;
+
+$val = n/(k*p);
+};
+
+
+POW: "\\*\\*";
+PLUS: "\\+";
+MINUS: "-";
+MUL: "\\*";
+DIV: "/";
+SIN: "sin";
+COS: "cos";
+NUM: "[0-9]+";
+OPEN: "\\(";
+CLOSE: "\\)";
+OPENBIN: "\\[";
+CLOSEBIN: "\\]";
+COMMA: ",";
+
+
